@@ -37,11 +37,11 @@ const Loader = ({ setLoading }) => {
         height: '100vh',
         backgroundColor: '#000',
         color: '#fff',
-        fontSize: '2.5rem',
+        fontSize: '2.2rem',
         textAlign: 'center',
       }}
     >
-      <motion.div variants={textVariants}>👋 Hi, I'am Jeetendra Kumar Barman</motion.div>
+      <motion.div variants={textVariants}>👋 Hi, Your Experience is Loading!</motion.div>
     </motion.div>
   );
 };
