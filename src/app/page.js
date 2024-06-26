@@ -1,95 +1,149 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
+import AppAppBar from './components/AppAppBar';
+import Hero from './components/Hero';
+import LogoCollection from './components/LogoCollection';
+import Highlights from './components/Highlights';
+import Pricing from './components/Pricing';
+import Features from './components/Features';
+import Testimonials from './components/Testimonials';
+import FAQ from './components/FAQ';
+import Footer from './components/Footer';
+import getLPTheme from './getLPTheme';
+import Loader from './components/Loader';
+import useLocomotiveScroll from './hooks/useLocomotiveScroll';
+
+import 'locomotive-scroll/dist/locomotive-scroll.css';
+// import './index.css'; // Ensure your custom CSS is imported
+
+import {
+  heroVariants,
+  logoCollectionVariants,
+  featuresVariants,
+  testimonialsVariants,
+  highlightsVariants,
+  pricingVariants,
+  faqVariants,
+  footerVariants,
+} from './animationVariants';
+import AnimatedSection from './components/AnimatedSection';
+
+function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100dvw',
+        position: 'fixed',
+        bottom: 24,
+      }}
+    >
+      <ToggleButtonGroup
+        color="primary"
+        exclusive
+        value={showCustomTheme}
+        onChange={toggleCustomTheme}
+        aria-label="Platform"
+        sx={{
+          backgroundColor: 'background.default',
+          '& .Mui-selected': {
+            pointerEvents: 'none',
+          },
+        }}
+      >
+        <ToggleButton value>
+          <AutoAwesomeRoundedIcon sx={{ fontSize: '20px', mr: 1 }} />
+          Custom theme
+        </ToggleButton>
+        <ToggleButton value={false}>Material Design 2</ToggleButton>
+      </ToggleButtonGroup>
+    </Box>
+  );
+}
+
+ToggleCustomTheme.propTypes = {
+  showCustomTheme: PropTypes.shape({
+    valueOf: PropTypes.func.isRequired,
+  }).isRequired,
+  toggleCustomTheme: PropTypes.func.isRequired,
+};
+
+export default function LandingPage() {
+  const [mode, setMode] = useState('dark');
+  const [showCustomTheme, setShowCustomTheme] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const LPtheme = createTheme(getLPTheme(mode));
+  const defaultTheme = createTheme({ palette: { mode } });
+
+  const toggleColorMode = () => {
+    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  const toggleCustomTheme = () => {
+    setShowCustomTheme((prev) => !prev);
+  };
+
+  const scrollRef = useLocomotiveScroll({ smooth: true });
+
+  if (loading) {
+    return <Loader setLoading={setLoading} />;
+  }
+
+  return (
+    <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
+      <CssBaseline />
+      <div ref={scrollRef} data-scroll-container>
+        <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
+        <AnimatedSection variants={heroVariants}>
+          <Hero />
+        </AnimatedSection>
+        <Box sx={{ bgcolor: 'background.default' }}>
+          <AnimatedSection variants={logoCollectionVariants}>
+            <LogoCollection />
+          </AnimatedSection>
+          <AnimatedSection variants={featuresVariants}>
+            <Features />
+          </AnimatedSection>
+          <Divider />
+          <AnimatedSection variants={testimonialsVariants}>
+            <Testimonials />
+          </AnimatedSection>
+          <Divider />
+          <AnimatedSection variants={highlightsVariants}>
+            <Highlights />
+          </AnimatedSection>
+          <Divider />
+          <AnimatedSection variants={pricingVariants}>
+            <Pricing />
+          </AnimatedSection>
+          <Divider />
+          <AnimatedSection variants={faqVariants}>
+            <FAQ />
+          </AnimatedSection>
+          <Divider />
+          <AnimatedSection variants={footerVariants}>
+            <Footer />
+          </AnimatedSection>
+        </Box>
+        <AnimatedSection variants={footerVariants}>
+          <ToggleCustomTheme
+            showCustomTheme={showCustomTheme}
+            toggleCustomTheme={toggleCustomTheme}
+          />
+        </AnimatedSection>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </ThemeProvider>
   );
 }
